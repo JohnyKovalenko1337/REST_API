@@ -1,5 +1,5 @@
 const express = require('express');
-const {body} = require('express-validator');
+const {body, validationResult} = require('express-validator');
 const User = require('../models/user');
 
 const router = express.Router();
@@ -8,7 +8,7 @@ const authController = require('../controllers/auth');
 
 router.put('/signup',[
     body('email').isEmail().withMessage('Please input valid email').custom((value,{req})=>{
-        return User.findOne({ email: value })
+        return User.findOne({email: value} )
         .then(userDoc => {
             if (userDoc) {
             return Promise.reject('E-Mail exists already, please pick a different one.') //  async validation
@@ -22,5 +22,7 @@ router.put('/signup',[
     ],
     authController.signup
 );
+
+router.post('/login',authController.login);
 
 module.exports = router;
