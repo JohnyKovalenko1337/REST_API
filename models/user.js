@@ -17,7 +17,7 @@ const userSchema = new Schema({
     },
     status:{
         type:String,
-        required:true
+        default: 'I am new!'
     },
     post:[{
         type: Schema.Types.ObjectId,
@@ -25,4 +25,4 @@ const userSchema = new Schema({
     }]
 });
 
-module.export = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);
