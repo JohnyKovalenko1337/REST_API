@@ -6,8 +6,11 @@ const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
+//=====================routs=================================
 const feedRoutes = require('./routes/feed.js');
+const authRoutes = require('./routes/auth.js');
 
+// ================================== file storing =============================
 const fileStorage = multer.diskStorage({
     destination: (req,file,cb)=>{
         cb(null, 'image');
@@ -30,12 +33,14 @@ const fileFilter = (req,file,cb)=>{
     }
 }
 
+//================================= util middlewares ====================================
 app.use(bodyParser.json());     //application/json
 app.use(
     multer({storage:fileStorage, fileFilter:fileFilter}).single('image')
     );
 app.use('/image', express.static(path.join(__dirname, 'image')));
 
+// ======================== setting header ====================
 app.use((req,res,next)=>{
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
@@ -43,17 +48,22 @@ app.use((req,res,next)=>{
     next();
 })
 
+// ============================middlewares ==================================
 app.use('/feed',feedRoutes);
+
+app.use('/auth',authRoutes);
 
 app.use((error,req,res,next)=>{
     console.log(error);
     const status = error.statusCode || 500;
+    const data = error.data;
     const message = error.message;
     res.status(status).json(
-        {message:message}
+        {message:message, data:data}
     );
 })
 
+// ======================================================================================
 mongoose.connect('mongodb+srv://sadJo:baran@cluster1-u8e3f.mongodb.net/rest?retryWrites=true&w=majority',
     { useUnifiedTopology: true ,useNewUrlParser: true})
 .then(result=>{
