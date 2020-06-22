@@ -19,18 +19,20 @@ const fileStorage = multer.diskStorage({
 
 const fileFilter = (req,file,cb)=>{
     if(
-        file.minetype === 'image/jpg' ||
-        file.minetype === 'image/jpeg' ||
-        file.minetype === 'image/png'
+        file.mimetype === 'image/jpg' ||
+        file.mimetype === 'image/jpeg' ||
+        file.mimetype === 'image/png'
     ){
         cb(null, true);
     }
-    cb(null, false);
+    else{
+        cb(null, false);
+    }
 }
 
 app.use(bodyParser.json());     //application/json
 app.use(
-    multer({fileStorage:fileStorage, fileFilter:fileFilter}).single('image')
+    multer({storage:fileStorage, fileFilter:fileFilter}).single('image')
     );
 app.use('/image', express.static(path.join(__dirname, 'image')));
 
