@@ -75,3 +75,36 @@ exports.login = (req,res,next)=>{
           next(err);
     });
 }
+
+exports.getStatus = (req,res,next)=>{
+    const userId = req.userId;
+    User.findById(userId)
+    .then(user=>{
+      res.status(200).json({message:'Succesed loadding', status:user.status})
+    })
+    .catch(err=>{
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    })
+  }
+  
+  exports.putStatus = (req,res,next)=>{
+    const status = req.body.status;
+    const userId = req.userId;
+    User.findById(userId)
+    .then(user=>{
+      user.status = status;
+      return user.save();
+    })
+    .then(result=>{
+      res.status(200).json({message:'Succesed adding a status'})
+    })
+    .catch(err=>{
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
+    })
+  }
