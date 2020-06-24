@@ -5,6 +5,7 @@ const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
+
 const app = express();
 //=====================routs=================================
 const feedRoutes = require('./routes/feed.js');
@@ -68,9 +69,12 @@ mongoose.connect('mongodb+srv://sadJo:baran@cluster1-u8e3f.mongodb.net/rest?retr
     { useUnifiedTopology: true ,useNewUrlParser: true})
 .then(result=>{
     console.log("success");
-    app.listen(8080);
+    const server  = app.listen(8080);
+    const io = require('./socket').init(server);
+    io.on('connection',(socket)=>{
+        console.log('Client Conneted');
+    })
 })
 .catch(err=>{
     console.log(err);
 })
-console.log("success");
