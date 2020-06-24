@@ -7,9 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 
 
 const app = express();
-//=====================routs=================================
-const feedRoutes = require('./routes/feed.js');
-const authRoutes = require('./routes/auth.js');
+
+
 
 // ================================== file storing =============================
 const fileStorage = multer.diskStorage({
@@ -50,9 +49,6 @@ app.use((req,res,next)=>{
 })
 
 // ============================middlewares ==================================
-app.use('/feed',feedRoutes);
-
-app.use('/auth',authRoutes);
 
 app.use((error,req,res,next)=>{
     console.log(error);
@@ -69,11 +65,7 @@ mongoose.connect('mongodb+srv://sadJo:baran@cluster1-u8e3f.mongodb.net/rest?retr
     { useUnifiedTopology: true ,useNewUrlParser: true})
 .then(result=>{
     console.log("success");
-    const server  = app.listen(8080);
-    const io = require('./socket').init(server);
-    io.on('connection',(socket)=>{
-        console.log('Client Conneted');
-    })
+    app.listen(8080);
 })
 .catch(err=>{
     console.log(err);
