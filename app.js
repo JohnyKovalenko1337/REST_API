@@ -4,11 +4,12 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
+const graphqlHttp = require('express-graphql');
 
+const graphqlSchema = require('./graphql/schema');
+const graphqlResolver = require('./graphql/resolvers');
 
 const app = express();
-
-
 
 // ================================== file storing =============================
 const fileStorage = multer.diskStorage({
@@ -49,6 +50,21 @@ app.use((req,res,next)=>{
 })
 
 // ============================middlewares ==================================
+app.use('/graphql', graphqlHttp({
+    schema: graphqlSchema,
+    rootValue: graphqlResolver,
+    graphiql: true,
+    formatError(err){
+        if(!err.originalError){
+            return err;
+        }
+        const data = err.originalError.data;
+        const code = err.originalError.code;
+        const message = err.message || 'error';
+        return {message: message, status: code, data: data}
+    }
+}))
+
 
 app.use((error,req,res,next)=>{
     console.log(error);
