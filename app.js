@@ -9,6 +9,8 @@ const graphqlHttp = require('express-graphql');
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 
+const auth = require('./middleware/is-auth');
+
 const app = express();
 
 // ================================== file storing =============================
@@ -53,6 +55,8 @@ app.use((req,res,next)=>{
 })
 
 // ============================middlewares ==================================
+app.use(auth);
+
 app.use('/graphql', graphqlHttp({
     schema: graphqlSchema,
     rootValue: graphqlResolver,
