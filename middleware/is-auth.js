@@ -12,13 +12,12 @@ module.exports = (req, res, next) => {
         decodedToken = jwt.verify(token, 'somesupersecret')
     }
     catch (err) {
-        err.statusCode = 500;
-        throw err;
+        req.isAuth = false;
+        return next();
     }
     if (!decodedToken) {
-        const error = new Error('Not Autenticated');
-        error.statusCode = 401;
-        throw error;
+        req.isAuth = false;
+        return next();
     }
     req.userId = decodedToken.userId;
     req.isAuth = true;
