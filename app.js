@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
 const bodyParser = require('body-parser');
 const path = require('path');
-const fs = require('fs');
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 const graphqlHttp = require('express-graphql');
@@ -10,6 +10,7 @@ const graphqlHttp = require('express-graphql');
 const graphqlSchema = require('./graphql/schema');
 const graphqlResolver = require('./graphql/resolvers');
 
+const {clearImage} = require('./util/clear');
 const auth = require('./middleware/is-auth');
 
 const app = express();
@@ -115,9 +116,3 @@ mongoose.connect('mongodb+srv://sadJo:baran@cluster1-u8e3f.mongodb.net/rest?retr
     console.log(err);
 });
 
-const clearImage = filePath =>{
-    filePath = path.join(__dirname, '..', filePath);
-    fs.unlink(filePath, err=>{
-      console.log(err);
-    })
-  }
