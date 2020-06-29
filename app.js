@@ -96,7 +96,7 @@ app.use('/graphql', graphqlHttp({
 
 
 app.use((error,req,res,next)=>{
-    console.log(error);
+    console.log(error);//l;
     const status = error.statusCode || 500;
     const data = error.data;
     const message = error.message;
